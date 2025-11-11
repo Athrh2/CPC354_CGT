@@ -1,32 +1,127 @@
-let gl, programInfo, buffers;
-let lastTime = 0;
+// Ensure you include glMatrix library in your HTML:
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
 
+let gl;
+let logoBuffers;
+let shaderProgram;
+
+// --- Vertex Shader ---
+const vsSource = `
+attribute vec3 aVertexPosition;
+attribute vec3 aVertexColor;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+varying lowp vec3 vColor;
+
+void main(void) {
+    gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
+    vColor = aVertexColor;
+}
+`;
+
+// --- Fragment Shader ---
+const fsSource = `
+varying lowp vec3 vColor;
+void main(void) {
+    gl_FragColor = vec4(vColor, 1.0);
+}
+`;
+
+// --- Initialize shaders ---
+function initShaders() {
+    const vertexShader = loadShader(gl.VERTEX_SHADER, vsSource);
+    const fragmentShader = loadShader(gl.FRAGMENT_SHADER, fsSource);
+
+    shaderProgram = gl.createProgram();
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
+
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+        return null;
+    }
+
+    gl.useProgram(shaderProgram);
+}
+
+// --- Helper to compile shader ---
+function loadShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+    }
+    return shader;
+}
+
+// --- Draw Scene ---
+function drawScene() {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // --- Projection matrix ---
+    const fieldOfView = 45 * Math.PI / 180;
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const zNear = 0.1;
+    const zFar = 100.0;
+    const projectionMatrix = mat4.create();
+    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+
+    // --- Model-view matrix ---
+    const modelViewMatrix = mat4.create();
+    mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -2.5]); // move back
+    // Optional rotation
+    // mat4.rotateY(modelViewMatrix, modelViewMatrix, performance.now() / 1000);
+
+    // --- Set shader uniforms ---
+    const uProjectionMatrix = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
+    const uModelViewMatrix = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
+    gl.uniformMatrix4fv(uProjectionMatrix, false, projectionMatrix);
+    gl.uniformMatrix4fv(uModelViewMatrix, false, modelViewMatrix);
+
+    // --- Bind buffers ---
+    gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.vertexBuffer);
+    const vertexPosition = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
+    gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexPosition);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.colorBuffer);
+    const vertexColor = gl.getAttribLocation(shaderProgram, 'aVertexColor');
+    gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vertexColor);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, logoBuffers.indexBuffer);
+    gl.drawElements(gl.TRIANGLES, logoBuffers.vertexCount, gl.UNSIGNED_SHORT, 0);
+}
+
+// --- Main function ---
 function main() {
-  const canvas = document.getElementById("glcanvas");
-  gl = canvas.getContext("webgl");
-  if (!gl) {
-    alert("WebGL not supported");
-    return;
-  }
+    const canvas = document.getElementById("glCanvas");
+    gl = canvas.getContext("webgl");
 
-  programInfo = initShaders(gl);
-  buffers = initBuffers(gl);
-  setupUI();
+    if (!gl) {
+        alert("WebGL not supported!");
+        return;
+    }
 
-  requestAnimationFrame(render);
+    // --- Initialize the logo buffers ---
+    logoBuffers = initLogoBuffers(gl); // from geometry.js
+
+    // --- Set viewport and clear color ---
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0.9, 0.9, 0.9, 1.0);
+    gl.enable(gl.DEPTH_TEST);
+
+    // --- Compile shaders ---
+    initShaders();
+
+    // --- Draw the 3D logo ---
+    drawScene();
 }
 
-function render(now) {
-  now *= 0.001; // ms to seconds
-  const deltaTime = now - lastTime;
-  lastTime = now;
-
-  gl.clearColor(0, 0, 0, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  drawAnimatedScene(gl, programInfo, buffers, deltaTime);
-
-  requestAnimationFrame(render);
-}
-
+// --- Run when window loads ---
 window.onload = main;

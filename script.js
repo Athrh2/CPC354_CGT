@@ -4,6 +4,8 @@
 let gl;
 let logoBuffers;
 let shaderProgram;
+// Animation shared variables (from animation.js)
+let modelMatrix = mat4.create();
 
 // --- Vertex Shader ---
 const vsSource = `
@@ -21,10 +23,15 @@ void main(void) {
 
 // --- Fragment Shader ---
 const fsSource = `
+precision mediump float;
 varying lowp vec3 vColor;
+uniform float uTime;
 void main(void) {
-    gl_FragColor = vec4(vColor, 1.0);
+    float shine = abs(sin(uTime * 2.0 + gl_FragCoord.x * 0.02));
+    vec3 finalColor = mix(vColor, vec3(1.0, 1.0, 1.0), shine * 0.2);
+    gl_FragColor = vec4(finalColor, 1.0);
 }
+
 `;
 
 // --- Initialize shaders ---
@@ -62,6 +69,10 @@ function loadShader(type, source) {
 // --- Draw Scene ---
 function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+    // Update time uniform for animation effects
+    const uTime = gl.getUniformLocation(shaderProgram, "uTime");
+    gl.uniform1f(uTime, performance.now() / 1000);
 
     // --- Projection matrix ---
     const fieldOfView = 45 * Math.PI / 180;
@@ -72,11 +83,17 @@ function drawScene() {
     mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
     // --- Model-view matrix ---
+    // --- Model-view matrix with animation transforms ---
     const modelViewMatrix = mat4.create();
-    mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -2.5]); // move back
-    // Optional rotation
-    // mat4.rotateY(modelViewMatrix, modelViewMatrix, performance.now() / 1000);
 
+    // Orbit camera around logo
+    const radius = 3.5;
+    const camX = Math.sin(rotationAngle) * radius;
+    const camZ = Math.cos(rotationAngle) * radius;
+
+    mat4.lookAt(modelViewMatrix, [camX, 0.5, camZ], [0, 0, 0], [0, 1, 0]);
+    mat4.scale(modelViewMatrix, modelViewMatrix, [scaleFactor, scaleFactor, scaleFactor]);
+    
     // --- Set shader uniforms ---
     const uProjectionMatrix = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
     const uModelViewMatrix = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
@@ -97,6 +114,38 @@ function drawScene() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, logoBuffers.indexBuffer);
     gl.drawElements(gl.TRIANGLES, logoBuffers.vertexCount, gl.UNSIGNED_SHORT, 0);
 }
+
+function animate(currentTime) {
+  if (!isAnimating) return; // pause if stopped
+
+  // Calculate delta time
+  if (!lastTime) lastTime = currentTime;
+  const deltaTime = (currentTime - lastTime) / 1000;
+  lastTime = currentTime;
+
+  // Add “pop-in” intro animation
+  if (currentTime < 1500) { // first 1.5 seconds
+    const t = currentTime / 1500;
+    scaleFactor = Math.min(1.0, t * 1.5); // zoom in
+    rotationAngle = Math.sin(t * Math.PI) * 0.3; // small wobble
+  }
+
+  // Update transformations
+  updateTransforms(deltaTime);
+
+  // Reset model matrix
+  mat4.identity(modelMatrix);
+  mat4.translate(modelMatrix, modelMatrix, [0, hoverOffset, -6]);
+  mat4.rotateY(modelMatrix, modelMatrix, rotationAngle);
+  mat4.scale(modelMatrix, modelMatrix, [scaleFactor, scaleFactor, scaleFactor]);
+
+  // Draw logo (Member A’s function)
+  drawScene();
+
+  // Next frame
+  requestAnimationFrame(animate);
+}
+
 
 // --- Main function ---
 function main() {
@@ -121,6 +170,10 @@ function main() {
 
     // --- Draw the 3D logo ---
     drawScene();
+
+    // --- Start animation loop ---
+    requestAnimationFrame(animate);
+
 }
 
 // --- Run when window loads ---

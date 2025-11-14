@@ -11,3 +11,7 @@ function drawAnimatedScene(gl, programInfo, buffers, deltaTime) {
   updateTransforms(deltaTime);
   drawLogo(gl, programInfo, buffers, rotation, scale);
 }
+// Example in animation.js - can access ui value 
+rotationSpeed = baseSpeed * uiSettings.speed;
+color = uiSettings.color;
+extrusionDepth = uiSettings.depth;

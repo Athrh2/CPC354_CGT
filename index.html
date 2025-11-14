@@ -3,27 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CGT 3D Word Logo - Animated TV Ident</title>
-  <link rel="stylesheet" href="style.css">
+  <title>CGT 3D Word Logo</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>CGT 3D Word Logo</h2>
-  <canvas id="glcanvas" width="800" height="600"></canvas>
+  <div id="container">
+    <!-- Left: WebGL Canvas -->
+    <div id="canvas-container">
+      <canvas id="glcanvas" width="800" height="600"></canvas>
+    </div>
 
-  <!-- UI Controls -->
-  <div id="controls">
-    <label>Color: <input type="color" id="colorPicker" value="#00aaff"></label>
-    <label>Speed: <input type="range" id="speedSlider" min="0.5" max="3" value="1" step="0.1"></label>
-    <button id="startBtn">Start Animation</button>
-    <button id="stopBtn">Stop Animation</button>
+    <!-- Right: Control Panel -->
+    <div id="control-panel">
+      <h2>Control Panel</h2>
+
+      <!-- Color -->
+      <label for="colorPicker">Logo Color:</label>
+      <input type="color" id="colorPicker" value="#00aaff">
+
+      <!-- Speed -->
+      <label for="speedSlider">Animation Speed:</label>
+      <input type="range" id="speedSlider" min="0.5" max="3" value="1" step="0.1">
+
+      <!-- Extrusion Depth -->
+      <label for="depthSlider">Extrusion Depth:</label>
+      <input type="range" id="depthSlider" min="0.1" max="2" value="1" step="0.1">
+
+      <!-- Dropdown Example -->
+      <label for="modeSelect">Animation Mode:</label>
+      <select id="modeSelect">
+        <option value="loop">Loop</option>
+        <option value="once">Play Once</option>
+      </select>
+
+      <!-- Buttons -->
+      <div class="buttons">
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Script order matters -->
+  <!-- Script order -->
   <script src="https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/dist/gl-matrix-min.js"></script>
   <script src="geometry.js"></script>
   <script src="animation.js"></script>
-  <script src="ui.js"></script>
   <script src="lighting.js"></script>
+  <script src="ui.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

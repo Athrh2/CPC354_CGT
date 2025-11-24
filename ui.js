@@ -113,4 +113,9 @@ function setupUI() {
   buildLogoGeometry();
   if (gl) logoBuffers = initLogoBuffers(gl);
   if (typeof drawScene === "function") drawScene();
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    resetAnimation();
+  });
+
 }

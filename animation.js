@@ -130,3 +130,27 @@ function stopAnimation() {
   console.log("Animation stopped");
 }
 
+function resetAnimation() {
+  // Stop animation first
+  isAnimating = false;
+  animationState = 0;
+
+  // Reset transforms
+  rotationAngle = 0;
+  rotationDirection = 1;
+
+  scaleFactor = 1.0;
+  scaleUp = true;
+
+  hoverOffset = 0;
+  hoverDirection = 1;
+
+  lastTime = null;
+
+  // Optional: clear background to default
+  gl.clearColor(0.9, 0.9, 0.9, 1.0);
+
+  if (typeof drawScene === "function") drawScene();
+
+  console.log("Animation reset");
+}

@@ -1,56 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CGT 3D Word Logo</title>
+  <meta charset="utf-8" />
+  <title>CGT 3D Logo — Member C UI</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="container">
-    <!-- Left: WebGL Canvas -->
-    <div id="canvas-container">
-      <canvas id="glcanvas" width="800" height="600"></canvas>
+    <div id="leftPane">
+      <canvas id="glCanvas"></canvas>
     </div>
 
-    <!-- Right: Control Panel -->
-    <div id="control-panel">
+    <div id="rightPane">
       <h2>Control Panel</h2>
 
-      <!-- Color -->
-      <label for="colorPicker">Logo Color:</label>
-      <input type="color" id="colorPicker" value="#00aaff">
+      <div class="group">
+        <label>Front Color</label>
+        <input type="color" id="frontColorPicker" value="#000033">
+      </div>
 
-      <!-- Speed -->
-      <label for="speedSlider">Animation Speed:</label>
-      <input type="range" id="speedSlider" min="0.5" max="3" value="1" step="0.1">
+      <div class="group">
+        <label>Front Color Mode</label>
+        <select id="frontColorMode">
+          <option value="solid">Solid</option>
+          <option value="gradient">Gradient</option>
+        </select>
+      </div>
 
-      <!-- Extrusion Depth -->
-      <label for="depthSlider">Extrusion Depth:</label>
-      <input type="range" id="depthSlider" min="0.1" max="2" value="1" step="0.1">
+      <div class="group">
+        <label>Back Color</label>
+        <input type="color" id="sideColorPicker" value="#0000A3">
+      </div>
 
-      <!-- Dropdown Example -->
-      <label for="modeSelect">Animation Mode:</label>
-      <select id="modeSelect">
-        <option value="loop">Loop</option>
-        <option value="once">Play Once</option>
-      </select>
+      <div class="group">
+        <label>Back Color Mode</label>
+        <select id="sideColorMode">
+          <option value="solid">Solid</option>
+          <option value="gradient">Gradient</option>
+        </select>
+      </div>
 
-      <!-- Buttons -->
-      <div class="buttons">
+      <div class="group">
+        <label>Background Color</label>
+        <input type="color" id="bgColorPicker" value="#e9eef3">
+      </div>
+
+      <hr/>
+
+      <div class="group">
+        <label>Size (Scale)</label><br>
+        <input type="range" id="sizeSlider" min="0.4" max="2.0" step="0.01" value="1.0">
+        <span id="sizeValue">1.00</span>
+      </div>
+
+      <div class="group">
+       <label>Animation Speed</label><br>
+       <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.05" value="1.0">
+       <span id="speedValue">1.00</span>
+      </div>
+
+      <div class="group">
+        <label>Extrusion Depth</label><br>
+        <input type="range" id="depthSlider" min="0.05" max="0.5" step="0.01" value="0.15">
+        <span id="depthValue">0.15</span>
+      </div>
+
+      <div class="group">
+        <label>Rotation Direction</label><br>
+        <select id="rotateDir">
+          <option value="right">Rotate Right</option>
+          <option value="left">Rotate Left</option>
+        </select>
+      </div>
+
+
+      <div class="group buttons">
         <button id="startBtn">Start</button>
         <button id="stopBtn">Stop</button>
-        <button id="resetBtn">Reset</button>
+        <button id="resetBtn" class="control-btn">Reset</button>
       </div>
     </div>
+
   </div>
 
-  <!-- Script order -->
-  <script src="https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/dist/gl-matrix-min.js"></script>
+  <!-- gl-matrix -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+  <!-- Geometry & animation (members A & B) -->
   <script src="geometry.js"></script>
   <script src="animation.js"></script>
-  <script src="lighting.js"></script>
+
+  <!-- UI (Member C) -->
   <script src="ui.js"></script>
+
+  <!-- Lighting (Member D) -->
+  <script src="lighting.js"></script>
+
+  <!-- Main drawing & shaders -->
   <script src="script.js"></script>
 </body>
 </html>

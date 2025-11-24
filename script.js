@@ -1,180 +1,146 @@
-// Ensure you include glMatrix library in your HTML:
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+// script.js (main, shaders, drawScene) — works with geometry.js
 
 let gl;
 let logoBuffers;
 let shaderProgram;
-// Animation shared variables (from animation.js)
-let modelMatrix = mat4.create();
 
-// --- Vertex Shader ---
+// simple vertex & fragment shaders (same as before)
 const vsSource = `
 attribute vec3 aVertexPosition;
 attribute vec3 aVertexColor;
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
 varying lowp vec3 vColor;
-
 void main(void) {
-    gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
-    vColor = aVertexColor;
+  gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aVertexPosition, 1.0);
+  vColor = aVertexColor;
 }
 `;
 
-// --- Fragment Shader ---
 const fsSource = `
 precision mediump float;
 varying lowp vec3 vColor;
 uniform float uTime;
 void main(void) {
-    float shine = abs(sin(uTime * 2.0 + gl_FragCoord.x * 0.02));
-    vec3 finalColor = mix(vColor, vec3(1.0, 1.0, 1.0), shine * 0.2);
-    gl_FragColor = vec4(finalColor, 1.0);
+  float shine = abs(sin(uTime * 2.0 + gl_FragCoord.x * 0.02));
+  vec3 pulse = mix(vColor, vec3(1.0), shine * 0.12);
+  gl_FragColor = vec4(pulse, 1.0);
 }
-
 `;
 
-// --- Initialize shaders ---
 function initShaders() {
-    const vertexShader = loadShader(gl.VERTEX_SHADER, vsSource);
-    const fragmentShader = loadShader(gl.FRAGMENT_SHADER, fsSource);
+  const vs = loadShader(gl.VERTEX_SHADER, vsSource);
+  const fs = loadShader(gl.FRAGMENT_SHADER, fsSource);
 
-    shaderProgram = gl.createProgram();
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
+  shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, vs);
+  gl.attachShader(shaderProgram, fs);
+  gl.linkProgram(shaderProgram);
 
-    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-        alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
-        return null;
-    }
-
-    gl.useProgram(shaderProgram);
-}
-
-// --- Helper to compile shader ---
-function loadShader(type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-    }
-    return shader;
-}
-
-// --- Draw Scene ---
-function drawScene() {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
-    // Update time uniform for animation effects
-    const uTime = gl.getUniformLocation(shaderProgram, "uTime");
-    gl.uniform1f(uTime, performance.now() / 1000);
-
-    // --- Projection matrix ---
-    const fieldOfView = 45 * Math.PI / 180;
-    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-    const zNear = 0.1;
-    const zFar = 100.0;
-    const projectionMatrix = mat4.create();
-    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-
-    // --- Model-view matrix ---
-    // --- Model-view matrix with animation transforms ---
-    const modelViewMatrix = mat4.create();
-
-    // Orbit camera around logo
-    const radius = 3.5;
-    const camX = Math.sin(rotationAngle) * radius;
-    const camZ = Math.cos(rotationAngle) * radius;
-
-    mat4.lookAt(modelViewMatrix, [camX, 0.5, camZ], [0, 0, 0], [0, 1, 0]);
-    mat4.scale(modelViewMatrix, modelViewMatrix, [scaleFactor, scaleFactor, scaleFactor]);
-    
-    // --- Set shader uniforms ---
-    const uProjectionMatrix = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
-    const uModelViewMatrix = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
-    gl.uniformMatrix4fv(uProjectionMatrix, false, projectionMatrix);
-    gl.uniformMatrix4fv(uModelViewMatrix, false, modelViewMatrix);
-
-    // --- Bind buffers ---
-    gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.vertexBuffer);
-    const vertexPosition = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
-    gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vertexPosition);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.colorBuffer);
-    const vertexColor = gl.getAttribLocation(shaderProgram, 'aVertexColor');
-    gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vertexColor);
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, logoBuffers.indexBuffer);
-    gl.drawElements(gl.TRIANGLES, logoBuffers.vertexCount, gl.UNSIGNED_SHORT, 0);
-}
-
-function animate(currentTime) {
-  if (!isAnimating) return; // pause if stopped
-
-  // Calculate delta time
-  if (!lastTime) lastTime = currentTime;
-  const deltaTime = (currentTime - lastTime) / 1000;
-  lastTime = currentTime;
-
-  // Add “pop-in” intro animation
-  if (currentTime < 1500) { // first 1.5 seconds
-    const t = currentTime / 1500;
-    scaleFactor = Math.min(1.0, t * 1.5); // zoom in
-    rotationAngle = Math.sin(t * Math.PI) * 0.3; // small wobble
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    console.error('Shader link error:', gl.getProgramInfoLog(shaderProgram));
+    return;
   }
+  gl.useProgram(shaderProgram);
 
-  // Update transformations
-  updateTransforms(deltaTime);
-
-  // Reset model matrix
-  mat4.identity(modelMatrix);
-  mat4.translate(modelMatrix, modelMatrix, [0, hoverOffset, -6]);
-  mat4.rotateY(modelMatrix, modelMatrix, rotationAngle);
-  mat4.scale(modelMatrix, modelMatrix, [scaleFactor, scaleFactor, scaleFactor]);
-
-  // Draw logo (Member A’s function)
-  drawScene();
-
-  // Next frame
-  requestAnimationFrame(animate);
+  shaderProgram.attribLocations = {
+    vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+    vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+  };
+  shaderProgram.uniformLocations = {
+    projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+    modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+    time: gl.getUniformLocation(shaderProgram, 'uTime')
+  };
 }
 
+function loadShader(type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
+  return shader;
+}
 
-// --- Main function ---
+// script.js (Modified drawScene function)
+
+function drawScene() {
+  if (!gl || !logoBuffers || !shaderProgram) return;
+
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // ... (Time Uniform remains the same)
+
+  // Projection Matrix setup remains the same
+  const fov = 45 * Math.PI / 180;
+  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const projectionMatrix = mat4.create();
+  mat4.perspective(projectionMatrix, fov, aspect, 0.1, 100.0);
+
+  const modelViewMatrix = mat4.create();
+  
+  // STEP 1: Position the Camera (Static View)
+  // Set a static viewpoint, looking towards the origin [0,0,0]
+  // The camera is located at [0, 0, 3.5]
+  mat4.lookAt(modelViewMatrix, [0, 0, 3.5], [0,0,0], [0,1,0]);
+
+  // STEP 2: Apply World/Model Transformations (Scale, Translation, Rotation)
+  
+  // Apply hover offset (translation)
+  mat4.translate(modelViewMatrix, modelViewMatrix, [0, hoverOffset, 0]);
+  
+  // Apply rotation around the Y-axis (vertical spin)
+  // This is the fix for the spinning
+  mat4.rotate(modelViewMatrix, modelViewMatrix, rotationAngle, [0, 1, 0]);
+  
+  // Apply scale transformation
+  mat4.scale(modelViewMatrix, modelViewMatrix, [scaleFactor, scaleFactor, scaleFactor]);
+
+  gl.uniformMatrix4fv(shaderProgram.uniformLocations.projectionMatrix, false, projectionMatrix);
+  gl.uniformMatrix4fv(shaderProgram.uniformLocations.modelViewMatrix, false, modelViewMatrix);
+    
+  gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.vertexBuffer);
+  gl.vertexAttribPointer(shaderProgram.attribLocations.vertexPosition, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(shaderProgram.attribLocations.vertexPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.colorBuffer);
+  gl.vertexAttribPointer(shaderProgram.attribLocations.vertexColor, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(shaderProgram.attribLocations.vertexColor);
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, logoBuffers.indexBuffer);
+  gl.drawElements(gl.TRIANGLES, logoBuffers.vertexCount, gl.UNSIGNED_SHORT, 0);
+}
+
 function main() {
-    const canvas = document.getElementById("glCanvas");
-    gl = canvas.getContext("webgl");
+  const canvas = document.getElementById("glCanvas");
+  gl = canvas.getContext("webgl");
+  if (!gl) { alert("WebGL not supported"); return; }
 
-    if (!gl) {
-        alert("WebGL not supported!");
-        return;
-    }
+  // size canvas
+  canvas.width = canvas.clientWidth || 800;
+  canvas.height = canvas.clientHeight || 600;
+  gl.viewport(0, 0, canvas.width, canvas.height);
 
-    // --- Initialize the logo buffers ---
-    logoBuffers = initLogoBuffers(gl); // from geometry.js
+  // make sure geometry globals exist
+  if (typeof buildLogoGeometry === "function") buildLogoGeometry();
+  logoBuffers = initLogoBuffers(gl);
 
-    // --- Set viewport and clear color ---
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.9, 0.9, 0.9, 1.0);
-    gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.DEPTH_TEST);
+  gl.clearColor(0.9, 0.9, 0.9, 1.0);
 
-    // --- Compile shaders ---
-    initShaders();
+  initShaders();
 
-    // --- Draw the 3D logo ---
-    drawScene();
+  // UI must be setup after gl + shaders are ready
+  if (typeof setupUI === "function") setupUI();
 
-    // --- Start animation loop ---
-    requestAnimationFrame(animate);
-
+  // draw initial paused frame
+  drawScene();
 }
 
-// --- Run when window loads ---
-window.onload = main;
+window.addEventListener("DOMContentLoaded", () => {
+    main();
+});

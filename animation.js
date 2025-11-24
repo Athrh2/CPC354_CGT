@@ -29,7 +29,7 @@ function updateTransforms(dt) {
   // -----------------------------
   // 1. ROTATION (left ↔ right)
   // -----------------------------
-  const rotSpeed = Math.PI / 2; // 180° per second
+  const rotSpeed = Math.PI / 2 * animationSpeed; // 180° per second
   rotationAngle += rotationDirection * rotSpeed * dt;
 
   if (Math.abs(rotationAngle) > Math.PI) {
@@ -55,7 +55,7 @@ function updateTransforms(dt) {
   // Triggered only when animationState==5
   // -----------------------------
   else if (animationState === 5) {
-      const scaleSpeed = 0.8 * animationSpeed;
+      const scaleSpeed = 0.5 * animationSpeed;
       scaleFactor += scaleSpeed * dt;
 
       if (scaleFactor >= targetScale) {
@@ -67,7 +67,7 @@ function updateTransforms(dt) {
   // -----------------------------
   // 4. HOVER UP DOWN
   // -----------------------------
-  const hoverSpeed = 1.0;
+  const hoverSpeed = 1.0 * animationSpeed;
   hoverOffset += hoverDirection * hoverSpeed * dt;
   if (Math.abs(hoverOffset) > 0.3) hoverDirection *= -1;
 

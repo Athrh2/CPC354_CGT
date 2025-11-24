@@ -58,20 +58,26 @@ function setupUI() {
     }
   });
 
-  // size slider
+  // Size slider
+  const sizeValue = document.getElementById("sizeValue");
   sizeSlider.addEventListener("input", (e) => {
     scaleFactor = parseFloat(e.target.value);
+    sizeValue.textContent = scaleFactor.toFixed(2); // show 2 decimal places
     if (typeof drawScene === "function") drawScene();
   });
 
-  // speed slider
+  // Speed slider
+  const speedValue = document.getElementById("speedValue");
   speedSlider.addEventListener("input", (e) => {
     animationSpeed = parseFloat(e.target.value);
+    speedValue.textContent = animationSpeed.toFixed(2);
   });
 
-  // depth slider
+  // Depth slider
+  const depthValue = document.getElementById("depthValue");
   depthSlider.addEventListener("input", (e) => {
     depth = parseFloat(e.target.value);
+    depthValue.textContent = depth.toFixed(2);
     buildLogoGeometry();
     if (gl) logoBuffers = initLogoBuffers(gl);
     if (typeof drawScene === "function") drawScene();

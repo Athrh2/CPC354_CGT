@@ -3,13 +3,13 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f2c2cd; /* only for the page around the container */
+  background: #b1cfbb; /* only for the page around the container */
 }
 
 #container {
   display: flex;
   height: 100vh;
-  background: #f2c2cd; /* outside canvas */
+  background: #b1cfbb; /* outside canvas */
 }
 
 /* Left pane: canvas */
@@ -38,7 +38,7 @@ html, body {
   flex: 1;
   padding: 18px;
   background: #fbd5d5;
-  border-left: 2px solid #fbd5d5;
+  border-left: 2px solid #b1cfbb;
   overflow-y: auto;
 }
 

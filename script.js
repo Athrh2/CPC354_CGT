@@ -21,27 +21,12 @@ const fsSource = `
 precision mediump float;
 varying lowp vec3 vColor;
 uniform float uTime;
-uniform float uRimPower;
-
 void main(void) {
-
-  // Rim light based on fragment position (screen-space fake normal)
-  float rim = abs(sin(gl_FragCoord.y * 0.015 + uTime * 1.4));
-  rim = pow(rim, uRimPower);   // sharpness control
-
-  vec3 rimGlow = vec3(1.0, 1.0, 1.0) * rim * 0.25;  // soft white halo
-
-  // Existing shine pulse
   float shine = abs(sin(uTime * 2.0 + gl_FragCoord.x * 0.02));
   vec3 pulse = mix(vColor, vec3(1.0), shine * 0.12);
-
-  // Combine base + rim glow
-  vec3 finalColor = pulse + rimGlow;
-
-  gl_FragColor = vec4(finalColor, 1.0);
+  gl_FragColor = vec4(pulse, 1.0);
 }
 `;
-
 
 function initShaders() {
   const vs = loadShader(gl.VERTEX_SHADER, vsSource);
@@ -65,8 +50,7 @@ function initShaders() {
   shaderProgram.uniformLocations = {
     projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
     modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
-    time: gl.getUniformLocation(shaderProgram, 'uTime'),
-    rimPower: gl.getUniformLocation(shaderProgram, 'uRimPower')
+    time: gl.getUniformLocation(shaderProgram, 'uTime')
   };
 }
 
@@ -118,8 +102,6 @@ function drawScene() {
 
   gl.uniformMatrix4fv(shaderProgram.uniformLocations.projectionMatrix, false, projectionMatrix);
   gl.uniformMatrix4fv(shaderProgram.uniformLocations.modelViewMatrix, false, modelViewMatrix);
-  gl.uniform1f(shaderProgram.uniformLocations.rimPower, 3.0);
-
     
   gl.bindBuffer(gl.ARRAY_BUFFER, logoBuffers.vertexBuffer);
   gl.vertexAttribPointer(shaderProgram.attribLocations.vertexPosition, 3, gl.FLOAT, false, 0, 0);
@@ -148,7 +130,6 @@ function main() {
   logoBuffers = initLogoBuffers(gl);
 
   gl.enable(gl.DEPTH_TEST);
-  gl.clearColor(0.9, 0.9, 0.9, 1.0);
 
   initShaders();
 

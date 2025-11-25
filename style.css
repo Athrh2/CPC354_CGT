@@ -1,9 +1,15 @@
 * { box-sizing: border-box; }
-html,body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2c2cd; /* only for the page around the container */
+}
 
 #container {
   display: flex;
   height: 100vh;
+  background: #f2c2cd; /* outside canvas */
 }
 
 /* Left pane: canvas */
@@ -13,17 +19,17 @@ html,body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
   align-items: center;
   justify-content: center;
   padding: 10px;
-  background: #e9eef3; /* default, controlled by UI */
+  background: #b1cfbb; /* let WebGL control the background */
 }
 
-/* Make canvas fill the left pane while keeping aspect ratio */
+/* Canvas fills left pane */
 #glCanvas {
   width: 100%;
   height: 100%;
   max-width: 1200px;
   max-height: 100%;
-  background: transparent;
-  border: 1px solid #d0d7df;
+  background: transparent; /* must stay transparent for gl.clearColor to show */
+  border: 1px solid #b1cfbb; /* optional border */
   display: block;
 }
 
@@ -31,8 +37,8 @@ html,body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
 #rightPane {
   flex: 1;
   padding: 18px;
-  background: #fff;
-  border-left: 2px solid #ddd;
+  background: #fbd5d5;
+  border-left: 2px solid #fbd5d5;
   overflow-y: auto;
 }
 
@@ -43,7 +49,7 @@ h3 { margin-top: 14px; font-size: 1rem; }
 label { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 6px; }
 
 input[type="range"] { width: 100%; }
-input[type="color"] { height: 36px; width: 100%; padding: 2px; border-radius: 4px; border: 1px solid #ccc; }
+input[type="color"] { height: 36px; width: 100%; padding: 2px; border-radius: 4px; border: 1px solid #de9cc6; }
 input[type="text"] { width: calc(100% - 90px); padding: 6px; margin-right: 6px; }
 select, button { padding: 8px 10px; }
 
@@ -70,25 +76,14 @@ input[type="color"] {
 }
 
 /* Start button - green */
-#startBtn {
-    background-color: #28a745;
-}
-#startBtn:hover {
-    background-color: #218838;
-}
+#startBtn { background-color: #28a745; }
+#startBtn:hover { background-color: #218838; }
 
 /* Stop button - red */
-#stopBtn {
-    background-color: #dc3545;
-}
-#stopBtn:hover {
-    background-color: #c82333;
-}
+#stopBtn { background-color: #dc3545; }
+#stopBtn:hover { background-color: #c82333; }
 
 /* Reset button - blue */
-#resetBtn {
-    background-color: #007bff;
-}
-#resetBtn:hover {
-    background-color: #0069d9;
-}
+#resetBtn { background-color: #007bff; }
+#resetBtn:hover { background-color: #0069d9; }
+

@@ -15,57 +15,56 @@
     <div id="rightPane">
       <h2>Control Panel</h2>
 
+      <!-- FRONT COLOR -->
       <div class="group">
-        <label>Front Color</label>
+        <label>Front Color</label><br>
         <input type="color" id="frontColorPicker" value="#000033">
+        <div class="colorModeButtons">
+          <button id="frontSolidBtn">Solid</button>
+          <button id="frontGradBtn">Gradient</button>
+        </div>
       </div>
 
+      <!-- BACK COLOR -->
       <div class="group">
-        <label>Front Color Mode</label>
-        <select id="frontColorMode">
-          <option value="solid">Solid</option>
-          <option value="gradient">Gradient</option>
-        </select>
-      </div>
-
-      <div class="group">
-        <label>Back Color</label>
+        <label>Back Color</label><br>
         <input type="color" id="sideColorPicker" value="#0000A3">
+        <div class="colorModeButtons">
+          <button id="backSolidBtn">Solid</button>
+          <button id="backGradBtn">Gradient</button>
+        </div>
       </div>
 
+      <!-- BACKGROUND COLOR -->
       <div class="group">
-        <label>Back Color Mode</label>
-        <select id="sideColorMode">
-          <option value="solid">Solid</option>
-          <option value="gradient">Gradient</option>
-        </select>
-      </div>
-
-      <div class="group">
-        <label>Background Color</label>
+        <label>Background Color</label><br>
         <input type="color" id="bgColorPicker" value="#e9eef3">
       </div>
 
       <hr/>
 
+      <!-- SCALE -->
       <div class="group">
         <label>Size (Scale)</label><br>
         <input type="range" id="sizeSlider" min="0.4" max="2.0" step="0.01" value="1.0">
         <span id="sizeValue">1.00</span>
       </div>
 
+      <!-- SPEED -->
       <div class="group">
-       <label>Animation Speed</label><br>
-       <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.05" value="1.0">
-       <span id="speedValue">1.00</span>
+        <label>Animation Speed</label><br>
+        <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.05" value="1.0">
+        <span id="speedValue">1.00</span>
       </div>
 
+      <!-- DEPTH -->
       <div class="group">
         <label>Extrusion Depth</label><br>
         <input type="range" id="depthSlider" min="0.05" max="0.5" step="0.01" value="0.15">
         <span id="depthValue">0.15</span>
       </div>
 
+      <!-- ROTATION -->
       <div class="group">
         <label>Rotation Direction</label><br>
         <select id="rotateDir">
@@ -74,27 +73,26 @@
         </select>
       </div>
 
-
+      <!-- CONTROLS -->
       <div class="group buttons">
         <button id="startBtn">Start</button>
         <button id="stopBtn">Stop</button>
         <button id="resetBtn" class="control-btn">Reset</button>
       </div>
     </div>
-
   </div>
 
   <!-- gl-matrix -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
 
-  <!-- Geometry & animation (members A & B) -->
+  <!-- Geometry & animation -->
   <script src="geometry.js"></script>
   <script src="animation.js"></script>
 
-  <!-- UI (Member C) -->
+  <!-- UI -->
   <script src="ui.js"></script>
 
-  <!-- Lighting (Member D) -->
+  <!-- Lighting -->
   <script src="lighting.js"></script>
 
   <!-- Main drawing & shaders -->

@@ -71,16 +71,6 @@ function updateTransforms(dt) {
   hoverOffset += hoverDirection * hoverSpeed * dt;
   if (Math.abs(hoverOffset) > 0.3) hoverDirection *= -1;
 
-  // -----------------------------
-  // 5. COLOR PULSE (faint glow)
-  // -----------------------------
-  const colorShift = (Math.sin(performance.now() / 500) + 1) / 2;
-  gl.clearColor(
-    0.9 - 0.2 * colorShift,
-    0.9,
-    0.9 + 0.1 * colorShift,
-    1.0
-  );
 }
 
 // single animate function
@@ -154,3 +144,4 @@ function resetAnimation() {
 
   console.log("Animation reset");
 }
+

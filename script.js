@@ -130,7 +130,10 @@ function main() {
   logoBuffers = initLogoBuffers(gl);
 
   gl.enable(gl.DEPTH_TEST);
+<<<<<<< HEAD
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
+=======
+>>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 
   initShaders();
 
@@ -143,4 +146,8 @@ function main() {
 
 window.addEventListener("DOMContentLoaded", () => {
     main();
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 30126bf662c80d01a192c2097c83f282740facce

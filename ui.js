@@ -39,14 +39,19 @@ function setupUI() {
 
   // Default UI values ("reset" defaults)
   const DEFAULTS = {
+    frontColor: "#0000FF",
+    sideColor: " #000000",
+    bgColor: "#E9EEF3",
     size: 1.0,
     speed: 1.0,
-    depth: 0.2,
+    depth: 0.15,
     rotate: "right", // "right" or "left"
     bgColor: bgPicker.value,
     frontColor: frontPicker.value,
     sideColor: sidePicker.value
   };
+
+  if (typeof frontColor === "undefined") window.frontColor = parseFloat(sizeSlider.value) || DEFAULTS.size;
 
   // initialize global variables that animation.js expects
   // scaleFactor and animationSpeed are globals defined in animation.js
@@ -63,22 +68,23 @@ function setupUI() {
 
   // helper to enable/disable UI elements during animation
   function setUIEnabled(enabled) {
-    // Controls we choose to lock during animation: size, rotate direction, depth, color mode switches
+    // Controls to be locked during animation: size, rotate direction, depth switches
     sizeSlider.disabled = !enabled;
     rotateDir.disabled = !enabled;
     depthSlider.disabled = !enabled;
 
     // start/stop/reset logic handled separately
-    // note: color pickers remain enabled so user can adjust colors while animating
-    // note: speed slider remains enabled so user can adjust speed while animating
+    // note: color pickers & speed slider remain enabled, 
+    // so user can adjust colors & speed respectively while animating
     frontSolidBtn.disabled = false;
     frontGradBtn.disabled = false;
     backSolidBtn.disabled = false;
     backGradBtn.disabled = false;
     frontPicker.disabled = false;
     sidePicker.disabled = false;
-    bgPicker.disabled = false;}
+    bgPicker.disabled = false;
     speedSlider.disabled = false;
+  }
 
   // color pickers — rebuild geometry and redraw
   frontPicker.addEventListener("input", (e) => {
@@ -103,6 +109,31 @@ function setupUI() {
     }
   });
 
+    function setFrontMode(mode) {
+      frontColorMode = mode;
+      // update visual selected class
+      frontSolidBtn.classList.toggle("selected", mode === "solid");
+      frontGradBtn.classList.toggle("selected", mode === "gradient");
+      // rebuild logo to reflect mode change
+      buildLogoGeometry();
+      if (typeof initLogoBuffers === "function" && gl) logoBuffers = initLogoBuffers(gl);
+      if (typeof drawScene === "function") drawScene();
+  }
+
+  frontSolidBtn.addEventListener("click", () => setFrontMode("solid"));
+  frontGradBtn.addEventListener("click", () => setFrontMode("gradient"));
+
+  function setBackMode(mode) {
+    sideColorMode = mode;
+    backSolidBtn.classList.toggle("selected", mode === "solid");
+    backGradBtn.classList.toggle("selected", mode === "gradient");
+    buildLogoGeometry();
+    if (typeof initLogoBuffers === "function" && gl) logoBuffers = initLogoBuffers(gl);
+    if (typeof drawScene === "function") drawScene();
+  }
+
+  backSolidBtn.addEventListener("click", () => setBackMode("solid"));
+  backGradBtn.addEventListener("click", () => setBackMode("gradient"));
 
   // Size slider
   sizeSlider.addEventListener("input", (e) => {
@@ -199,6 +230,16 @@ function setupUI() {
     setAnimationSpeed(DEFAULTS.speed);
     setRotationDirection((DEFAULTS.rotate === "left") ? -1 : 1);
 
+    frontPicker.dispatchEvent(new Event("input"));
+    frontSolidBtn.dispatchEvent(new Event("click"));
+    sidePicker.dispatchEvent(new Event("input"));
+    backSolidBtn.dispatchEvent(new Event("click"));
+    bgPicker.dispatchEvent(new Event("input"));
+    depthSlider.dispatchEvent(new Event("input"));
+    sizeSlider.dispatchEvent(new Event("input"));
+    speedSlider.dispatchEvent(new Event("input"));
+    rotateDir.dispatchEvent(new Event("change"));
+    
     // rebuild geometry/redraw
     buildLogoGeometry();
     if (gl) logoBuffers = initLogoBuffers(gl);

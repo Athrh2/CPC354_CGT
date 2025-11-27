@@ -3,8 +3,8 @@ scale = 0.6;
 depth = 0.15; // adjustable
 
 // color arrays (normalized 0..1)
-frontColor = [0.0, 0.0, 0.2];   // default front
-sideColor = [0.0, 0.0, 0.639];  // default CGT blue
+frontColor = [0.0, 0.0, 0.639];   // default front CGT blue
+sideColor = [0.0, 0.0, 0.0];  // default back black
 
 // color mode: "solid" | "gradient"
 let frontColorMode = "solid";

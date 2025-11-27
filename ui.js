@@ -88,35 +88,11 @@ function setupUI() {
       if (typeof drawScene === "function") drawScene();
   });
 
-  frontSolidBtn.addEventListener("click", () => {
-    frontSolidBtn.classList.add("selected");
-    frontGradBtn.classList.remove("selected");
-    window.setColorMode("solid");
-  });
-
-  frontGradBtn.addEventListener("click", () => {
-    frontGradBtn.classList.add("selected");
-    frontSolidBtn.classList.remove("selected");
-    window.setColorMode("gradient");
-  });
-
   sidePicker.addEventListener("input", (e) => {
     sideColor = hexToRgbNorm(e.target.value);
     buildLogoGeometry();
     if (gl) logoBuffers = initLogoBuffers(gl);
     if (typeof drawScene === "function") drawScene();
-  });
-
-  backSolidBtn.addEventListener("click", () => {
-    backSolidBtn.classList.add("selected");
-    backGradBtn.classList.remove("selected");
-    window.setBackMode("solid");
-  });
-
-  backGradBtn.addEventListener("click", () => {
-    backGradBtn.classList.add("selected");
-    backSolidBtn.classList.remove("selected");
-    window.setBackMode("gradient");
   });
 
   bgPicker.addEventListener("input", (e) => {

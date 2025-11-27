@@ -75,9 +75,41 @@ input[type="color"] {
     min-width: 70px;
 }
 
+.color-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mode-group {
+  margin-left: 12px;
+}
+
+.mode-btn {
+  cursor: pointer;
+  margin-right: 6px;
+  padding: 8px 12px;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background: #eee;
+  font-size: 15px;
+}
+
+.mode-btn.selected {
+  background: #cce5ff;
+  border-color: #4a90e2;
+  font-weight: bold;
+}
+
+.disabledbtn {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Start button - green */
 #startBtn { background-color: #28a745; }
 #startBtn:hover { background-color: #218838; }
+
 
 /* Stop button - red */
 #stopBtn { background-color: #dc3545; }

@@ -30,12 +30,14 @@ function setupUI() {
   const speedValue = document.getElementById("speedValue");
   const depthValue = document.getElementById("depthValue");
 
-  if (!frontPicker || !sidePicker || !bgPicker || !sizeSlider || !speedSlider || !depthSlider || !rotateDir || !startBtn || !stopBtn || !frontSolidBtn || !frontGradBtn || !backSolidBtn || !backGradBtn || !resetBtn) {
+  if (!frontPicker || !sidePicker || !bgPicker || !sizeSlider || !speedSlider || !depthSlider || !rotateDir 
+      || !startBtn || !stopBtn || !resetBtn || !frontSolidBtn || !frontGradBtn || !backSolidBtn || !backGradBtn
+      || !sizeValue || !speedValue || !depthValue) {
     console.error("UI elements missing — check IDs in HTML");
     return;
   }
 
-  // Default UI values (these are your "reset" defaults)
+  // Default UI values ("reset" defaults)
   const DEFAULTS = {
     size: 1.0,
     speed: 1.0,
@@ -65,18 +67,18 @@ function setupUI() {
     sizeSlider.disabled = !enabled;
     rotateDir.disabled = !enabled;
     depthSlider.disabled = !enabled;
-    frontSolidBtn.disabled = !enabled;
-    frontGradBtn.disabled = !enabled;
-    backSolidBtn.disabled = !enabled;
-    backGradBtn.disabled = !enabled;
-    frontPicker.disabled = !enabled;
-    sidePicker.disabled = !enabled;
-    bgPicker.disabled = !enabled;
 
     // start/stop/reset logic handled separately
+    // note: color pickers remain enabled so user can adjust colors while animating
     // note: speed slider remains enabled so user can adjust speed while animating
+    frontSolidBtn.disabled = false;
+    frontGradBtn.disabled = false;
+    backSolidBtn.disabled = false;
+    backGradBtn.disabled = false;
+    frontPicker.disabled = false;
+    sidePicker.disabled = false;
+    bgPicker.disabled = false;}
     speedSlider.disabled = false;
-  }
 
   // color pickers — rebuild geometry and redraw
   frontPicker.addEventListener("input", (e) => {
@@ -86,11 +88,35 @@ function setupUI() {
       if (typeof drawScene === "function") drawScene();
   });
 
+  frontSolidBtn.addEventListener("click", () => {
+    frontSolidBtn.classList.add("selected");
+    frontGradBtn.classList.remove("selected");
+    window.setColorMode("solid");
+  });
+
+  frontGradBtn.addEventListener("click", () => {
+    frontGradBtn.classList.add("selected");
+    frontSolidBtn.classList.remove("selected");
+    window.setColorMode("gradient");
+  });
+
   sidePicker.addEventListener("input", (e) => {
     sideColor = hexToRgbNorm(e.target.value);
     buildLogoGeometry();
     if (gl) logoBuffers = initLogoBuffers(gl);
     if (typeof drawScene === "function") drawScene();
+  });
+
+  backSolidBtn.addEventListener("click", () => {
+    backSolidBtn.classList.add("selected");
+    backGradBtn.classList.remove("selected");
+    window.setBackMode("solid");
+  });
+
+  backGradBtn.addEventListener("click", () => {
+    backGradBtn.classList.add("selected");
+    backSolidBtn.classList.remove("selected");
+    window.setBackMode("gradient");
   });
 
   bgPicker.addEventListener("input", (e) => {
@@ -100,6 +126,7 @@ function setupUI() {
       if (typeof drawScene === "function") drawScene();
     }
   });
+
 
   // Size slider
   sizeSlider.addEventListener("input", (e) => {

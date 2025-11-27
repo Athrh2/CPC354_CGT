@@ -17,27 +17,29 @@
 
       <!-- FRONT COLOR -->
       <div class="group">
-        <label>Front Color</label><br>
-        <input type="color" id="frontColorPicker" value="#000033">
-        <div class="colorModeButtons">
-          <button id="frontSolidBtn">Solid</button>
-          <button id="frontGradBtn">Gradient</button>
-        </div>
+        <label for="frontColorPicker">Front Color</label>
+        <div class="color-row">
+          <input type="color" id="frontColorPicker">
+          <div class="mode-group" id="frontModeGroup">
+            <button class="mode-btn solid selected" id="frontSolidBtn">Solid</button>
+            <button class="mode-btn gradient" id="frontGradBtn">Gradient</button>
+          </div>
+        </div>  
       </div>
 
       <!-- BACK COLOR -->
-      <div class="group">
-        <label>Back Color</label><br>
+      <label for="sideColorPicker">Back Color</label>
+      <div class="color-row">  
         <input type="color" id="sideColorPicker" value="#0000A3">
-        <div class="colorModeButtons">
-          <button id="backSolidBtn">Solid</button>
-          <button id="backGradBtn">Gradient</button>
+        <div class="mode-group" id="backModeGroup">
+          <button class="mode-btn solid selected" id="backSolidBtn">Solid</button>
+          <button class="mode-btn gradient" id="backGradBtn">Gradient</button>
         </div>
       </div>
 
       <!-- BACKGROUND COLOR -->
       <div class="group">
-        <label>Background Color</label><br>
+        <label for="bgColorPicker">Background Color</label>
         <input type="color" id="bgColorPicker" value="#e9eef3">
       </div>
 
@@ -45,28 +47,28 @@
 
       <!-- SCALE -->
       <div class="group">
-        <label>Size (Scale)</label><br>
+        <label for="sizeSlider">Size (Scale)</label>
         <input type="range" id="sizeSlider" min="0.4" max="2.0" step="0.01" value="1.0">
         <span id="sizeValue">1.00</span>
       </div>
 
       <!-- SPEED -->
       <div class="group">
-        <label>Animation Speed</label><br>
+        <label for="speedSlider">Animation Speed</label>
         <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.05" value="1.0">
         <span id="speedValue">1.00</span>
       </div>
 
       <!-- DEPTH -->
       <div class="group">
-        <label>Extrusion Depth</label><br>
+        <label for="depthSlider">Extrusion Depth</label>
         <input type="range" id="depthSlider" min="0.05" max="0.5" step="0.01" value="0.15">
         <span id="depthValue">0.15</span>
       </div>
 
       <!-- ROTATION -->
       <div class="group">
-        <label>Rotation Direction</label><br>
+        <label for="rotateDir">Rotation Direction</label>
         <select id="rotateDir">
           <option value="right">Rotate Right</option>
           <option value="left">Rotate Left</option>
@@ -87,6 +89,8 @@
 
   <!-- Geometry & animation -->
   <script src="geometry.js"></script>
+
+  <!-- Animation -->
   <script src="animation.js"></script>
 
   <!-- UI -->

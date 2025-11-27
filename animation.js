@@ -1,4 +1,4 @@
-// animation.js — single authoritative animate + control API (improved smooth transitions + UI semantics)
+// animation.js — single authoritative animate + control API
 
 // globals
 let rotationAngle = 0;          // main orientation (radians)
@@ -29,7 +29,8 @@ let animationState = 0;
 // 3 rotate opposite direction 180°
 // 4 back to original (0°)
 // 5 scale up to fullscreen
-// 6 hover loop (continuous)
+// 6 scale down to original UI size
+// 7 hover loop (continuous)
 
 
 // Helper: move current value towards target by at most maxDelta
@@ -59,7 +60,8 @@ function updateTransforms(dt) {
 
     if (Math.abs(rotationAngle - target) <= EPS) {
       rotationAngle = target;
-      animationState = 2;
+      console.log("STATE 1 complete: first 180° rotation done");
+      animationState = 2; //rotate back
     }
     return;
   }
@@ -73,7 +75,8 @@ function updateTransforms(dt) {
 
     if (Math.abs(rotationAngle - target) <= EPS) {
       rotationAngle = 0;
-      animationState = 3;
+      console.log("STATE 2 complete: returned to 0°");
+      animationState = 3; //rotate opposite
     }
     return;
   }
@@ -87,7 +90,8 @@ function updateTransforms(dt) {
 
     if (Math.abs(rotationAngle - target) <= EPS) {
       rotationAngle = target;
-      animationState = 4;
+      console.log("STATE 3 complete: opposite 180° rotation done");
+      animationState = 4; //rotate back
     }
     return;
   }
@@ -101,7 +105,8 @@ function updateTransforms(dt) {
 
     if (Math.abs(rotationAngle - target) <= EPS) {
       rotationAngle = 0;
-      animationState = 5;
+      console.log("STATE 4 complete: returned to 0° (rotation sequence done)");
+      animationState = 5; //scale up
     }
     return;
   }
@@ -115,16 +120,32 @@ function updateTransforms(dt) {
 
     if (Math.abs(scaleFactor - FULLSCREEN_SCALE) <= EPS) {
       scaleFactor = FULLSCREEN_SCALE;
-      animationState = 6;
+      console.log("STATE 5 complete: fullscreen scale reached");
+      animationState = 6; //scale down
     }
     return;
   }
 
   // -------------------------
-  // State 6: hover loop continuously
+  // State 6: scale down to original UI value
   // -------------------------
   if (animationState === 6) {
-    // simple ping-pong hover using capped delta
+    // current scale approaches original scale smoothly
+    scaleFactor = moveTowards(scaleFactor, originalScale, maxScaleDelta);
+
+    if (Math.abs(scaleFactor - originalScale) <= EPS) {
+      scaleFactor = originalScale;
+      console.log("STATE 6 complete: returned to original UI scale");
+      animationState = 7; //hover loop
+    }
+    return;
+  }
+
+  // -------------------------
+  // State 7: hover loop continuously
+  // -------------------------
+  if (animationState === 7) {
+    // simple hover up and down using capped delta
     hoverOffset += hoverDirection * maxHoverDelta;
 
     if (hoverOffset >= 0.35) {
@@ -134,6 +155,7 @@ function updateTransforms(dt) {
       hoverOffset = -0.35;
       hoverDirection = 1;
     }
+    console.log("STATE 7: hovering at offset", hoverOffset.toFixed(3));
     return;
   }
 
@@ -207,7 +229,7 @@ function resetAnimation() {
 
   if (typeof drawScene === "function") drawScene();
 
-  console.log("Animation reset to defaults");
+  console.log("Animation reset to defaults.");
 }
 
 // API used by UI to change parameters safely

@@ -101,21 +101,16 @@ input[type="color"] {
   font-weight: bold;
 }
 
-.disabledbtn {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* Start button - green */
-#startBtn { background-color: #28a745; }
-#startBtn:hover { background-color: #218838; }
+#startBtn { background-color: #28a745; border: 2px solid #e7e7e7;}
+#startBtn:hover { background-color: #218838; box-shadow:0 8px 16px 0 rgba(0,0,0,0.2);}
 
 
 /* Stop button - red */
-#stopBtn { background-color: #dc3545; }
-#stopBtn:hover { background-color: #c82333; }
+#stopBtn { background-color: #dc3545; border: 2px solid #e7e7e7;}
+#stopBtn:hover { background-color: #c82333; box-shadow:0 8px 16px 0 rgba(0,0,0,0.2);}
 
 /* Reset button - blue */
-#resetBtn { background-color: #007bff; }
-#resetBtn:hover { background-color: #0069d9; }
+#resetBtn { background-color: #007bff; border: 2px solid #e7e7e7;}
+#resetBtn:hover { background-color: #0069d9; box-shadow:0 8px 16px 0 rgba(0,0,0,0.2);}
 

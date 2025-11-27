@@ -11,68 +11,6 @@
     <div id="leftPane">
       <canvas id="glCanvas"></canvas>
     </div>
-<<<<<<< HEAD
-
-    <div id="rightPane">
-      <h2>Control Panel</h2>
-
-      <div class="group">
-        <label>Front Color</label>
-        <input type="color" id="frontColorPicker" value="#000033">
-      </div>
-
-      <div class="group">
-        <label>Back Color</label>
-        <input type="color" id="sideColorPicker" value="#0000A3">
-      </div>
-
-      <div class="group">
-        <label>Background Color</label>
-        <input type="color" id="bgColorPicker" value="#e9eef3">
-      </div>
-
-      <hr/>
-
-      <div class="group">
-        <label>Size (Scale)</label><br>
-        <input type="range" id="sizeSlider" min="0.4" max="2.0" step="0.01" value="1.0">
-        <span id="sizeValue">1.00</span>
-      </div>
-
-      <div class="group">
-       <label>Animation Speed</label><br>
-       <input type="range" id="speedSlider" min="0.1" max="3.0" step="0.05" value="1.0">
-       <span id="speedValue">1.00</span>
-      </div>
-
-      <div class="group">
-        <label>Extrusion Depth</label><br>
-        <input type="range" id="depthSlider" min="0.05" max="0.5" step="0.01" value="0.15">
-        <span id="depthValue">0.15</span>
-      </div>
-
-      <div class="group">
-        <label>Rotation Direction</label><br>
-        <select id="rotateDir">
-          <option value="right">Rotate Right</option>
-          <option value="left">Rotate Left</option>
-        </select>
-      </div>
-
-      <!--
-      <div class="group">
-        <label><input type="checkbox" id="scaleBounce" checked> Enable scale bounce (up/down)</label>
-      </div>
-      -->
-
-      <div class="group buttons">
-        <button id="startBtn">Start</button>
-        <button id="stopBtn">Stop</button>
-        <button id="resetBtn" class="control-btn">Reset</button>
-      </div>
-    </div>
-
-=======
 
     <div id="rightPane">
       <h2>Control Panel</h2>
@@ -142,21 +80,11 @@
         <button id="resetBtn" class="control-btn">Reset</button>
       </div>
     </div>
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
   </div>
 
   <!-- gl-matrix -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
 
-<<<<<<< HEAD
-  <!-- Geometry & animation (members A & B) -->
-  <script src="geometry.js"></script>
-  <script src="animation.js"></script>
-
-  <!-- UI (Member C) -->
-  <script src="ui.js"></script>
-
-=======
   <!-- Geometry & animation -->
   <script src="geometry.js"></script>
   <script src="animation.js"></script>
@@ -167,7 +95,6 @@
   <!-- Lighting -->
   <script src="lighting.js"></script>
 
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
   <!-- Main drawing & shaders -->
   <script src="script.js"></script>
 </body>

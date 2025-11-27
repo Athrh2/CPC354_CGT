@@ -6,13 +6,10 @@ depth = 0.15; // adjustable
 frontColor = [0.0, 0.0, 0.2];   // default front (dark)
 sideColor = [0.0, 0.0, 0.639];  // default CGT blue
 
-<<<<<<< HEAD
-=======
 // Color mode: "solid" or "gradient"
 let frontColorMode = "solid";
 let sideColorMode = "solid";
 
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 // geometry storage (rebuild when depth/colors change)
 let vertices = [];
 let colors = [];
@@ -24,20 +21,11 @@ function buildLogoGeometry() {
   indices = [];
   let idxOffset = 0;
 
-<<<<<<< HEAD
-  function createCuboid(x1, y1, x2, y2, zFront = -depth, zBack = depth) {
-=======
   function createCuboid(x1, y1, x2, y2, zFront = -depth, zBack = depth, frontMode = "solid", sideMode = "solid") {
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     const verts = [
       x1, y1, zFront, x2, y1, zFront, x2, y2, zFront, x1, y2, zFront,
       x1, y1, zBack,  x2, y1, zBack,  x2, y2, zBack,  x1, y2, zBack
     ];
-<<<<<<< HEAD
-    const cols = [];
-    for (let i = 0; i < 4; i++) cols.push(...frontColor);
-    for (let i = 0; i < 4; i++) cols.push(...sideColor);
-=======
 
     const cols = [];
 
@@ -69,7 +57,6 @@ function buildLogoGeometry() {
       }
     }
 
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     const inds = [
       0,1,2, 0,2,3,
       4,6,5, 4,7,6,
@@ -78,10 +65,6 @@ function buildLogoGeometry() {
       2,6,7, 2,7,3,
       3,7,4, 3,4,0
     ];
-<<<<<<< HEAD
-=======
-
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     return { verts, cols, inds };
   }
 
@@ -92,11 +75,7 @@ function buildLogoGeometry() {
     [-1.0*scale, -0.50*scale, -0.45*scale, -0.38*scale]
   ];
   C_bars.forEach(rect => {
-<<<<<<< HEAD
-    const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3]);
-=======
     const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3], -depth, depth, frontColorMode, sideColorMode);
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     vertices.push(...v);
     colors.push(...c);
     indices.push(...ind.map(i => i + idxOffset));
@@ -112,11 +91,7 @@ function buildLogoGeometry() {
     [0.20*scale, -0.05*scale, 0.3*scale, -0.4*scale]
   ];
   G_bars.forEach(rect => {
-<<<<<<< HEAD
-    const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3]);
-=======
     const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3], -depth, depth, frontColorMode, sideColorMode);
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     vertices.push(...v);
     colors.push(...c);
     indices.push(...ind.map(i => i + idxOffset));
@@ -129,11 +104,7 @@ function buildLogoGeometry() {
     [0.65*scale, 0.4*scale, 0.75*scale, -0.5*scale]
   ];
   T_bars.forEach(rect => {
-<<<<<<< HEAD
-    const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3]);
-=======
     const { verts: v, cols: c, inds: ind } = createCuboid(rect[0], rect[1], rect[2], rect[3], -depth, depth, frontColorMode, sideColorMode);
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
     vertices.push(...v);
     colors.push(...c);
     indices.push(...ind.map(i => i + idxOffset));

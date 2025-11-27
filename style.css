@@ -1,22 +1,15 @@
 * { box-sizing: border-box; }
-<<<<<<< HEAD
-html,body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
-=======
 html, body {
   height: 100%;
   margin: 0;
   font-family: Arial, sans-serif;
   background: #b1cfbb; /* only for the page around the container */
 }
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 
 #container {
   display: flex;
   height: 100vh;
-<<<<<<< HEAD
-=======
   background: #b1cfbb; /* outside canvas */
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 }
 
 /* Left pane: canvas */
@@ -26,29 +19,17 @@ html, body {
   align-items: center;
   justify-content: center;
   padding: 10px;
-<<<<<<< HEAD
-  background: #e9eef3; /* default, controlled by UI */
-}
-
-/* Make canvas fill the left pane while keeping aspect ratio */
-=======
   background: #b1cfbb; /* let WebGL control the background */
 }
 
 /* Canvas fills left pane */
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 #glCanvas {
   width: 100%;
   height: 100%;
   max-width: 1200px;
   max-height: 100%;
-<<<<<<< HEAD
-  background: transparent;
-  border: 1px solid #d0d7df;
-=======
   background: transparent; /* must stay transparent for gl.clearColor to show */
   border: 1px solid #b1cfbb; /* optional border */
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
   display: block;
 }
 
@@ -56,13 +37,8 @@ html, body {
 #rightPane {
   flex: 1;
   padding: 18px;
-<<<<<<< HEAD
-  background: #fff;
-  border-left: 2px solid #ddd;
-=======
   background: #fbd5d5;
   border-left: 2px solid #b1cfbb;
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
   overflow-y: auto;
 }
 
@@ -73,11 +49,7 @@ h3 { margin-top: 14px; font-size: 1rem; }
 label { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 6px; }
 
 input[type="range"] { width: 100%; }
-<<<<<<< HEAD
-input[type="color"] { height: 36px; width: 100%; padding: 2px; border-radius: 4px; border: 1px solid #ccc; }
-=======
 input[type="color"] { height: 36px; width: 100%; padding: 2px; border-radius: 4px; border: 1px solid #de9cc6; }
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
 input[type="text"] { width: calc(100% - 90px); padding: 6px; margin-right: 6px; }
 select, button { padding: 8px 10px; }
 
@@ -104,30 +76,6 @@ input[type="color"] {
 }
 
 /* Start button - green */
-<<<<<<< HEAD
-#startBtn {
-    background-color: #28a745;
-}
-#startBtn:hover {
-    background-color: #218838;
-}
-
-/* Stop button - red */
-#stopBtn {
-    background-color: #dc3545;
-}
-#stopBtn:hover {
-    background-color: #c82333;
-}
-
-/* Reset button - blue */
-#resetBtn {
-    background-color: #007bff;
-}
-#resetBtn:hover {
-    background-color: #0069d9;
-}
-=======
 #startBtn { background-color: #28a745; }
 #startBtn:hover { background-color: #218838; }
 
@@ -139,4 +87,3 @@ input[type="color"] {
 #resetBtn { background-color: #007bff; }
 #resetBtn:hover { background-color: #0069d9; }
 
->>>>>>> 30126bf662c80d01a192c2097c83f282740facce
